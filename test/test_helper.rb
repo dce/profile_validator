@@ -7,7 +7,7 @@ unless defined?(ProfileValidator)
   
   require File.dirname(__FILE__) + "/../init"
   
-  ['profile', 'flickr_profile', 'linked_in_profile', 'twitter_profile', 'profile_validator'].each do |file|
+  ['profile', 'profile_validator'].each do |file|
     require File.dirname(__FILE__) + "/../lib/#{file}"
   end
   

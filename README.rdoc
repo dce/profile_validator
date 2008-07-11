@@ -1,6 +1,6 @@
 = ProfileValidator
 
-This plugin allows ActiveRecord models to be associated with profiles on other websites. In order to confirm ownership, it checks the profile for the presence of specified URL, which the user will have to add. Currently, three websites are supported (Flickr, LinkedIn, and Twitter), but it is straightforward to add new sites by subclassing the Profile model.
+This plugin allows ActiveRecord models to be associated with profiles on other websites. In order to confirm ownership, it checks the profile for the presence of specified URL, which the user will have to add. Currently, any website that uses the HCard microformat (http://microformats.org/wiki/hcard) is supported, but it's possible to work with other sites by subclassing the Profile model.
 
 == Installation
 
@@ -16,21 +16,14 @@ To add ProfileValidator to your model, simply add 'validates_profile':
     validates_profile
   end
   
-This will create the association with the Profile model, and add a new method, <tt>url\_for\_profile</tt>, which you'll probably want to overload to match the user's page within your application. The user will need to put this URL in his/her profile in order to claim it.
+This will create the association with the Profile model, and add a new method, <tt>url\_for\_profile</tt>, which you'll probably want to overload to match the user's page within your application. The user will need to put this URL in his/her profile in order to claim it. A Profile has two properties: the URL of the profile page and a Profileable model, which is connected with a polymorphic association.
 
-A Profile has two properties: the URL of the profile page and a Profileable model, which is connected with a polymorphic association. When creating a new Profile, you'll want to use one of the subclasses, since Profile itself can't be instantiated.
-
-  FlickrProfile.create(params[:profile].merge :profileable => user)
-    
-If you know you'll only be adding profiles from one website, you can specify it using the <tt>:site</tt> option:
+If you'd like to associate users with sites that don't support HCard, you can subclass the Profile model and overload the protected <tt>data</tt> method, which is used to fetch profile information, and possibly <tt>is_owned?</tt>, which checks if the profile is owned by the associated model.
+You would then specify the new Profile like this (for a FacebookProfile):
 
   class User < ActiveRecord::Base
-    validates_profile :site => 'linked_in'
+    validates_profile :site => 'facebook'
   end
-
-Then you'll be able to create profiles in the more conventional manner:
-
-  user.profiles.create(params[:profile])
 
 == Libraries
 

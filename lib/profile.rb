@@ -5,25 +5,22 @@ class Profile < ActiveRecord::Base
   
   validates_presence_of :url, :profileable_id, :profileable_type
   validates_uniqueness_of :url, :scope => [:profileable_id, :profileable_type]
-  validate :validate_url
+  validate :validate_profile_ownership
   
   protected
   
-  def validate_url
-    validate_correct_url_format and validate_profile_ownership unless self.url.blank?
+  def data
+    @data ||= HCard.find :first => url
   end
   
-  def validate_correct_url_format
-    valid = self.has_correct_url_format?
-    errors.add(:url, "does not match indicated website") unless valid
-    valid
+  def is_owned?
+    self.data and self.data.properties.include? 'url' and self.data.url and self.data.url.include? self.profileable.url_for_profile
   end
   
   def validate_profile_ownership
-    info = self.fetch_profile_info
-    valid = (info.properties.include? 'url' and info.url and info.url.include? self.profileable.url_for_profile)
-    errors.add(:url, "is not owned by user") unless valid
-    valid
+    unless self.url.blank?
+      errors.add(:url, "is not owned by user") unless is_owned?
+    end
   end
   
 end
