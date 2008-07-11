@@ -35,8 +35,8 @@ Then you'll be able to create profiles like this:
 
 == Todo
 
-  * Make validation optional
-  * Add new functionality to the model based on information in profile
+* Make validation optional
+* Add new functionality to the model based on information in profile
 
 == License
 
