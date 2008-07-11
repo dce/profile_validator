@@ -7,6 +7,14 @@ class Profile < ActiveRecord::Base
   validates_uniqueness_of :url, :scope => [:profileable_id, :profileable_type]
   validate :validate_profile_ownership
   
+  def method_missing(symbol, *args)
+    begin
+      super(symbol, *args)
+    rescue NoMethodError
+      data.send(symbol, *args)
+    end
+  end
+
   protected
   
   def data

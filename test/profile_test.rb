@@ -20,7 +20,7 @@ class ProfileTest < Test::Unit::TestCase
 
       setup do
         @user = User.create(:name => 'Test User')
-        info = stub(:properties => ['url'], :url => @user.url_for_profile)
+        info = stub(:properties => ['url'], :url => @user.url_for_profile, :fn => 'Test User')
         HCard.stubs(:find).with(:first => 'http://www.example.com/testuser').returns(info)
       end
 
@@ -47,6 +47,11 @@ class ProfileTest < Test::Unit::TestCase
         profile = User.create.profiles.create(:url => 'http://www.example.com/testuser')
         assert_equal profile.valid?, false
         assert_equal profile.errors["url"], "is not owned by user"
+      end
+
+      should "pass missing methods onto microformat data" do
+        profile = @user.profiles.create(:url => 'http://www.example.com/testuser')
+        assert_equal @user.name, profile.fn
       end
 
     end
