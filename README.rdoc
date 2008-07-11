@@ -34,7 +34,7 @@ Then you'll be able to create profiles in the more conventional manner:
 
 == Libraries
 
-ProfileValidator uses mofo[http://mofo.rubyforge.org/] to retrieve microformat data from websites. The test suite uses Shoulda[http://thoughtbot.com/projects/shoulda] for contexts and Mocha[http://mocha.rubyforge.org/] for mocking and stubbing.
+ProfileValidator uses mofo (http://mofo.rubyforge.org/) to retrieve microformat data from websites. The test suite uses Shoulda (http://thoughtbot.com/projects/shoulda) for contexts and Mocha (http://mocha.rubyforge.org/) for mocking and stubbing.
 
 == Todo
 
