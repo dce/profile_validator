@@ -26,9 +26,7 @@ class Profile < ActiveRecord::Base
   end
   
   def validate_profile_ownership
-    unless self.url.blank?
-      errors.add(:url, "is not owned by user") unless is_owned?
-    end
+    errors.add(:url, "is not owned by user") unless self.url.blank? or is_owned?
   end
   
 end
