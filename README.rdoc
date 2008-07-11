@@ -8,7 +8,7 @@ In order to create the Profile database table, run the following generator:
 
   script/generate profile_validator_migration
 
-== Example
+== Examples
 
 To add ProfileValidator to your model, simply add 'validates_profile':
 
@@ -28,9 +28,13 @@ If you know you'll only be adding profiles from one website, you can specify it 
     validates_profile :site => 'linked_in'
   end
 
-Then you'll be able to create profiles like this:
+Then you'll be able to create profiles in the more conventional manner:
 
   user.profiles.create(params[:profile])
+
+== Libraries
+
+ProfileValidator uses mofo[http://mofo.rubyforge.org/] to retrieve microformat data from websites. The test suite uses Shoulda[http://thoughtbot.com/projects/shoulda] for contexts and Mocha[http://mocha.rubyforge.org/] for mocking and stubbing.
 
 == Todo
 
