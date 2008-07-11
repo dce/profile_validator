@@ -16,17 +16,16 @@ To add ProfileValidator to your model, simply add 'validates_profile':
     validates_profile
   end
   
-This will create the association with the Profile model, and add a new method, url\_for\_profile, which you'll probably want to overload to match the user's page within your application. The user will need to put this URL in their profile in order for the profile to be added.
+This will create the association with the Profile model, and add a new method, <tt>url\_for\_profile</tt>, which you'll probably want to overload to match the user's page within your application. The user will need to put this URL in their profile in order for the profile to be added.
 
 When creating a new Profile, you'll want to use one of the subclasses, since Profile itself can't be instantiated.
 
   FlickrProfile.create(params[:profile].merge :profileable => user)
     
-If you know you'll only be adding profiles from one website, you can redefine the association to specify the proper subclass:
+If you know you'll only be adding profiles from one website, you can specify it using the <tt>:site</tt> option:
 
   class User < ActiveRecord::Base
-    validates_profile
-    has_many :profiles, :as => :profileable, :class_name => 'LinkedInProfile'
+    validates_profile :site => 'linked_in'
   end
 
 Then you'll be able to create profiles like this:

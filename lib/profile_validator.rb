@@ -8,8 +8,10 @@ module ProfileValidator
 
   module ClassMethods
     
-    def validates_profile
-      has_many :profiles, :as => :profileable
+    def validates_profile(options = {})
+      association_options = { :as => :profileable }
+      association_options[:class_name] = options[:site].camelcase + 'Profile' if options[:site]
+      has_many :profiles, association_options
       include InstanceMethods
     end
     
