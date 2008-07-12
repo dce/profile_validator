@@ -1,6 +1,6 @@
 = ProfileValidator
 
-This plugin allows ActiveRecord models to be associated with profiles on other websites. In order to confirm ownership, it checks the profile for the presence of specified URL, which the user will have to add. Currently, any website that uses the HCard microformat (http://microformats.org/wiki/hcard) is supported, but it's possible to work with other sites by subclassing the Profile model.
+This plugin allows ActiveRecord models to be associated with profiles on other websites. In order to confirm ownership, it checks the profile for the presence of specified URL, which the user will have to add. Currently, any website that uses the HCard microformat (http://microformats.org/wiki/hcard) is supported, but it's possible to work with other sites by subclassing the Profile model. It's been tested with LinkedIn, Flickr, and Twitter.
 
 == Installation
 
@@ -18,7 +18,7 @@ To add ProfileValidator to your model, simply add 'validates_profile':
   
 This will create the association with the Profile model, and add a new method, <tt>url\_for\_profile</tt>, which you'll probably want to overload to match the user's page within your application. The user will need to put this URL in his/her profile in order to claim it. A Profile has two properties: the URL of the profile page and a Profileable model, which is connected with a polymorphic association. <tt>validates_profile</tt> accepts an optional <tt>:url_format</tt> paramter which specifies a regular expression that the profile URL must match:
 
-  class FlickrUser < ActiveRecord::Base
+  class User < ActiveRecord::Base
     validates_profile :url_format => /^http:\/\/www\.flickr\.com\/people\/\w+$/
   end
 
