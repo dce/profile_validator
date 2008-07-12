@@ -10,7 +10,7 @@ class ProfileTest < Test::Unit::TestCase
       assert_equal profile.errors['url'], "can't be blank"
     end
 
-    should "require a profileable" do
+    should "require a profileable model" do
       profile = Profile.new
       assert_equal profile.valid?, false
       assert_equal profile.errors['profileable_id'], "can't be blank"
@@ -54,6 +54,26 @@ class ProfileTest < Test::Unit::TestCase
         assert_equal @user.name, profile.fn
       end
 
+      context "limited to one site" do
+
+        setup do
+          @flickr_user = FlickrUser.create
+          info = stub(:properties => ['url'], :url => @flickr_user.url_for_profile)
+          HCard.stubs(:find).with(:first => 'http://www.flickr.com/people/flickruser').returns(info)
+        end
+
+        should "work if URL matches pattern" do
+          profile = @flickr_user.profiles.create(:url => 'http://www.flickr.com/people/flickruser')
+          assert profile.valid?
+        end
+
+        should "require profile URL to match specified pattern" do
+          profile = @flickr_user.profiles.create(:url => 'http://www.example.com/testuser')
+          assert_equal profile.valid?, false
+          assert_equal profile.errors["url"], "is invalid"
+        end
+
+      end
     end
   end
 end

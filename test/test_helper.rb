@@ -1,4 +1,5 @@
 unless defined?(ProfileValidator)
+
   require 'rubygems'
   require 'active_record'
   require 'test/unit'
@@ -15,12 +16,17 @@ unless defined?(ProfileValidator)
   ActiveRecord::Base.establish_connection(config["database"])
   
   ActiveRecord::Base.connection.drop_table :users rescue nil
+  ActiveRecord::Base.connection.drop_table :flickr_users rescue nil
   ActiveRecord::Base.connection.drop_table :profiles rescue nil
   
   ActiveRecord::Base.connection.create_table :users do |t|
     t.string :name, :string
   end
   
+  ActiveRecord::Base.connection.create_table :flickr_users do |t|
+    t.string :name, :string
+  end
+
   ActiveRecord::Base.connection.create_table :profiles do |t|
     t.string  :type
     t.integer :profileable_id
@@ -32,4 +38,9 @@ unless defined?(ProfileValidator)
   class User < ActiveRecord::Base
     validates_profile
   end
+
+  class FlickrUser < ActiveRecord::Base
+    validates_profile :url_format => /^http:\/\/www\.flickr\.com\/people\/\w+$/
+  end
+
 end

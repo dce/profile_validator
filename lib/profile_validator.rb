@@ -13,6 +13,9 @@ module ProfileValidator
       association_options[:class_name] = options[:site].camelcase + 'Profile' if options[:site]
       has_many :profiles, association_options
       include InstanceMethods
+
+      write_inheritable_attribute :url_format, options[:url_format] || /.*/
+      class_inheritable_reader :url_format
     end
     
   end

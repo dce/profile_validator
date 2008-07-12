@@ -5,7 +5,7 @@ class Profile < ActiveRecord::Base
   
   validates_presence_of :url, :profileable_id, :profileable_type
   validates_uniqueness_of :url, :scope => [:profileable_id, :profileable_type]
-  validate :validate_profile_ownership
+  validate :validate_url
   
   def method_missing(symbol, *args)
     begin
@@ -22,11 +22,23 @@ class Profile < ActiveRecord::Base
   end
   
   def is_owned?
-    self.data and self.data.properties.include? 'url' and self.data.url and self.data.url.include? self.profileable.url_for_profile
+    data and data.properties.include? 'url' and data.url and data.url.include? self.profileable.url_for_profile
+  end
+
+  def validate_url
+    validate_url_format and validate_profile_ownership unless self.profileable.blank?
+  end
+
+  def validate_url_format
+    valid = self.url =~ self.profileable.class.url_format
+    errors.add(:url, "is invalid") unless valid
+    valid
   end
   
   def validate_profile_ownership
-    errors.add(:url, "is not owned by user") unless self.url.blank? or is_owned?
+    valid = is_owned?
+    errors.add(:url, "is not owned by user") unless valid
+    valid
   end
   
 end
