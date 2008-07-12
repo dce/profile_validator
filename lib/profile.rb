@@ -30,14 +30,12 @@ class Profile < ActiveRecord::Base
   end
 
   def validate_url_format
-    valid = self.url =~ self.profileable.class.url_format
-    errors.add(:url, "is invalid") unless valid
+    errors.add(:url, "is invalid") unless valid = (self.url =~ self.profileable.class.url_format)
     valid
   end
   
   def validate_profile_ownership
-    valid = is_owned?
-    errors.add(:url, "is not owned by user") unless valid
+    errors.add(:url, "is not owned by user") unless valid = is_owned?
     valid
   end
   
