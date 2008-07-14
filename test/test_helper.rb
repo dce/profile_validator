@@ -16,15 +16,11 @@ unless defined?(ProfileValidator)
   ActiveRecord::Base.establish_connection(config["database"])
   
   ActiveRecord::Base.connection.drop_table :users rescue nil
-  ActiveRecord::Base.connection.drop_table :flickr_users rescue nil
   ActiveRecord::Base.connection.drop_table :profiles rescue nil
   
   ActiveRecord::Base.connection.create_table :users do |t|
-    t.string :name, :string
-  end
-  
-  ActiveRecord::Base.connection.create_table :flickr_users do |t|
-    t.string :name, :string
+    t.string :name
+    t.string :type
   end
 
   ActiveRecord::Base.connection.create_table :profiles do |t|
@@ -39,7 +35,7 @@ unless defined?(ProfileValidator)
     validates_profile
   end
 
-  class FlickrUser < ActiveRecord::Base
+  class FlickrUser < User
     validates_profile :url_format => /^http:\/\/www\.flickr\.com\/people\/\w+$/
   end
 
