@@ -50,8 +50,8 @@ class ProfileTest < Test::Unit::TestCase
       end
 
       should "pass missing methods onto microformat data" do
-        profile = @user.profiles.create(:url => 'http://www.example.com/testuser')
-        assert_equal @user.name, profile.fn
+        @user.profiles.create(:url => 'http://www.example.com/testuser')
+        assert_equal @user.name, @user.profiles.first.fn
       end
 
       context "limited to one site" do
