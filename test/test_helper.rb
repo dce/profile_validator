@@ -1,16 +1,14 @@
 unless defined?(ProfileValidator)
-
   require 'rubygems'
   require 'active_record'
   require 'test/unit'
   require 'shoulda'
   require 'mocha'
   
+  $:.unshift(File.dirname(__FILE__) + '/../lib')
+  require 'profile'
+  require 'profile_validator'
   require File.dirname(__FILE__) + "/../init"
-  
-  ['profile', 'profile_validator'].each do |file|
-    require File.dirname(__FILE__) + "/../lib/#{file}"
-  end
   
   config = open(File.dirname(__FILE__) + "/config.yml") { |f| YAML.load(f.read) }
   ActiveRecord::Base.establish_connection(config["database"])
