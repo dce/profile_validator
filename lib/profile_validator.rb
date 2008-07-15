@@ -1,39 +1,40 @@
-module ProfileValidator
-  
-  def self.included(base)
-    base.class_eval do
-      base.extend ClassMethods
-    end
-  end
-
-  module ClassMethods
+module Viget
+  module ProfileValidator
     
-    def validates_profile(options = {})
-      association_options = { :as => :profileable }
-      association_options[:class_name] = options[:site].camelcase + 'Profile' if options[:site]
+    def self.included(base)
+      base.class_eval do
+        base.extend ClassMethods
+      end
+    end
+  
+    module ClassMethods
 
-      if options[:multiple]
-        has_many :profiles, association_options
-      else
-        has_one :profile, association_options
+      def validates_profile(options = {})
+        association_options = { :as => :profileable }
+        association_options[:class_name] = options[:site].camelcase + 'Profile' if options[:site]
+
+        if options[:multiple]
+          has_many :profiles, association_options
+        else
+          has_one :profile, association_options
+        end
+
+        class_inheritable_reader :url_format
+        format = options[:url_format]
+        format = [format || /^https?:\/\/\w{2,}\.\w{2,}/] unless format.is_a?(Array)
+        write_inheritable_attribute(:url_format, format)
+
+        include InstanceMethods
       end
 
-      class_inheritable_reader :url_format
-      format = options[:url_format]
-      format = [format || /^https?:\/\/\w{2,}\.\w{2,}/] unless format.is_a?(Array)
-      write_inheritable_attribute(:url_format, format)
-
-      include InstanceMethods
     end
     
-  end
+    module InstanceMethods
   
-  module InstanceMethods
+      def url_for_profile
+        "http://example.com/#{self.id}"
+      end
 
-    def url_for_profile
-      "http://example.com/#{self.id}"
     end
-    
   end
-  
 end

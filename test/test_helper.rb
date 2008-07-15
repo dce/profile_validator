@@ -1,4 +1,4 @@
-unless defined?(ProfileValidator)
+unless defined?(Viget::ProfileValidator)
   require 'rubygems'
   require 'active_record'
   require 'test/unit'
