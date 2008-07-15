@@ -18,7 +18,7 @@ class Profile < ActiveRecord::Base
   protected
   
   def data
-    @data ||= HCard.find :first => url
+    @data ||= HCard.find :first => url rescue nil
   end
   
   def is_owned?

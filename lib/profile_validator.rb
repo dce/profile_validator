@@ -15,7 +15,7 @@ module ProfileValidator
       has_many :profiles, association_options
 
       class_inheritable_reader :url_format
-      write_inheritable_attribute(:url_format, options[:url_format] || /.*/)
+      write_inheritable_attribute(:url_format, options[:url_format] || /^https?:\/\/\w{2,}\.\w{2,}/)
 
       include InstanceMethods
     end

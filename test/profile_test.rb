@@ -20,38 +20,58 @@ class ProfileTest < Test::Unit::TestCase
 
       setup do
         @user = User.create(:name => 'Test User')
-        info = stub(:properties => ['url'], :url => @user.url_for_profile, :fn => 'Test User')
-        HCard.stubs(:find).with(:first => 'http://www.example.com/testuser').returns(info)
       end
 
-      should "work if user's URL is in profile" do
-        profile = @user.profiles.create(:url => 'http://www.example.com/testuser')
-        assert profile.valid?
-      end
-
-      should "be unique for a given user" do
-        @user.profiles.create(:url => 'http://www.example.com/testuser')
-        profile = @user.profiles.create(:url => 'http://www.example.com/testuser')
+      should "should perform basic URL format validation" do
+        profile = @user.profiles.create(:url => 'bad url')
         assert_equal profile.valid?, false
-        assert_equal profile.errors["url"], "has already been taken"
+        assert_equal profile.errors["url"], "is invalid"
       end
 
-      should "require profile URL to have user data" do
+      should "handle nonexistent URLs gracefully" do
+        HCard.stubs(:find).with(:first => 'http://www.badurl.com').raises(SocketError)
+        profile = @user.profiles.create(:url => 'http://www.badurl.com')
+        assert_equal profile.valid?, false
+        assert_equal profile.errors["url"], "is not owned by user"
+      end
+
+      should "require URL to have user data" do
         HCard.stubs(:find).with(:first => 'http://www.microsoft.com').returns(nil)
         profile = @user.profiles.create(:url => 'http://www.microsoft.com')
         assert_equal profile.valid?, false
         assert_equal profile.errors["url"], "is not owned by user"
       end
 
-      should "require user's URL to be in profile" do
-        profile = User.create.profiles.create(:url => 'http://www.example.com/testuser')
-        assert_equal profile.valid?, false
-        assert_equal profile.errors["url"], "is not owned by user"
-      end
+      context "and a profile URL" do
 
-      should "pass missing methods onto microformat data" do
-        @user.profiles.create(:url => 'http://www.example.com/testuser')
-        assert_equal @user.name, @user.profiles.first.fn
+        setup do
+          info = stub(:properties => ['url'], :url => @user.url_for_profile, :fn => 'Test User')
+          HCard.stubs(:find).with(:first => 'http://www.example.com/testuser').returns(info)
+        end
+
+        should "work if user's URL is in profile" do
+          profile = @user.profiles.create(:url => 'http://www.example.com/testuser')
+          assert profile.valid?
+        end
+
+        should "be unique for a given user" do
+          @user.profiles.create(:url => 'http://www.example.com/testuser')
+          profile = @user.profiles.create(:url => 'http://www.example.com/testuser')
+          assert_equal profile.valid?, false
+          assert_equal profile.errors["url"], "has already been taken"
+        end
+
+        should "require user's URL to be in profile" do
+          profile = User.create.profiles.create(:url => 'http://www.example.com/testuser')
+          assert_equal profile.valid?, false
+          assert_equal profile.errors["url"], "is not owned by user"
+        end
+
+        should "pass missing methods onto microformat data" do
+          @user.profiles.create(:url => 'http://www.example.com/testuser')
+          assert_equal @user.name, @user.profiles.first.fn
+        end
+
       end
 
       context "limited to one site" do
