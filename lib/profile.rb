@@ -22,11 +22,11 @@ class Profile < ActiveRecord::Base
   end
   
   def is_owned?
-    data and data.properties.include? 'url' and data.url and data.url.include? self.profileable.url_for_profile
+    data && data.properties.include?('url') && data.url && data.url.include?(self.profileable.url_for_profile)
   end
 
   def validate_url
-    validate_url_format and validate_profile_ownership unless self.profileable.blank?
+    validate_url_format && validate_profile_ownership unless self.profileable.blank?
   end
 
   def validate_url_format
