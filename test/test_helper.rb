@@ -26,6 +26,7 @@ unless defined?(ProfileValidator)
     t.integer :profileable_id
     t.string  :profileable_type
     t.string  :url
+    t.text    :hcard
     t.timestamps
   end
   

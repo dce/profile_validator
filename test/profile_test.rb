@@ -45,17 +45,20 @@ class ProfileTest < Test::Unit::TestCase
       context "and a profile URL" do
 
         setup do
-          info = stub(:properties => ['url'], :url => @user.url_for_profile, :fn => 'Test User')
+          hcard = "<div class='vcard'>" \
+                  "  <span class='fn'>#{@user.name}</span>" \
+                  "  <a class='url' href='#{@user.url_for_profile}'>My Homepage</a>" \
+                  "</div>"
+          info = HCard.find :text => hcard
           HCard.stubs(:find).with(:first => 'http://www.example.com/testuser').returns(info)
+          @profile = @user.profiles.create(:url => 'http://www.example.com/testuser')
         end
 
         should "work if user's URL is in profile" do
-          profile = @user.profiles.create(:url => 'http://www.example.com/testuser')
-          assert profile.valid?
+          assert @profile.valid?
         end
 
         should "be unique for a given user" do
-          @user.profiles.create(:url => 'http://www.example.com/testuser')
           profile = @user.profiles.create(:url => 'http://www.example.com/testuser')
           assert_equal profile.valid?, false
           assert_equal profile.errors["url"], "has already been taken"
@@ -68,8 +71,13 @@ class ProfileTest < Test::Unit::TestCase
         end
 
         should "pass missing methods onto microformat data" do
-          @user.profiles.create(:url => 'http://www.example.com/testuser')
           assert_equal @user.name, @user.profiles.first.fn
+        end
+
+        should "serialize hCard information" do
+          @profile.update_attribute(:url, "bad url")
+          @user.reload
+          assert @user.profiles.first.hcard.instance_of?(HCard)
         end
 
       end

@@ -7,6 +7,8 @@ class Profile < ActiveRecord::Base
   validates_uniqueness_of :url, :scope => [:profileable_id, :profileable_type]
   validate :validate_url
   
+  serialize :hcard
+
   def method_missing(symbol, *args)
     begin
       super(symbol, *args)
@@ -18,7 +20,7 @@ class Profile < ActiveRecord::Base
   protected
   
   def data
-    @data ||= HCard.find :first => url rescue nil
+    self.hcard ||= HCard.find :first => url rescue nil
   end
   
   def is_owned?
