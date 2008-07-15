@@ -22,7 +22,13 @@ This will create the association with the Profile model, and add a new method, <
     validates_profile :url_format => /^http:\/\/www\.flickr\.com\/people\/\w+$/
   end
 
-If you'd like to associate users with sites that don't support HCard, you can subclass the Profile model and overload the protected <tt>data</tt> method, which is used to fetch profile information, and possibly <tt>is_owned?</tt>, which checks if the profile is owned by the associated model. You would then specify the new Profile like this (for a FacebookProfile):
+By default, validates_profile adds a <tt>has_one</tt> relationship with Profile. If you would like to associate multiple profiles with your model, use the <tt>multiple</tt> option:
+
+  class User < ActiveRecord::Base
+    validates_profile :multiple => true
+  end
+
+If you'd like to associate users with sites that don't support HCard, you can subclass the Profile model and overload the protected <tt>data</tt> method, which is used to fetch profile information, and the <tt>is_owned?</tt> method, which checks if the profile is owned by the associated model. You would then specify the new Profile like this (for a FacebookProfile):
 
   class User < ActiveRecord::Base
     validates_profile :site => 'facebook'
@@ -34,7 +40,6 @@ ProfileValidator uses mofo (http://mofo.rubyforge.org/) to retrieve microformat 
 
 == Todo
 
-* Add new functionality to the model based on information in profile
 * Make validation optional
 * Define a better default URL
 

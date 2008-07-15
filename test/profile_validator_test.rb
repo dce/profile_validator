@@ -8,12 +8,24 @@ class ProfileValidatorTest < Test::Unit::TestCase
       @user = User.create
     end
     
-    should "have profiles" do
-      assert_equal @user.profiles, []
+    should "have a profile" do
+      assert_nil @user.profile
     end
     
     should "have a profile URL" do
       assert_equal @user.url_for_profile, "http://example.com/#{@user.id}"
+    end
+
+  end
+
+  context "A class validating multiple profiles" do
+
+    setup do
+      @user = MultipleProfileUser.create
+    end
+
+    should "have multiple profiles" do
+      assert_equal @user.profiles, []
     end
 
   end

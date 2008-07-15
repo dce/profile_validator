@@ -12,7 +12,11 @@ module ProfileValidator
       association_options = { :as => :profileable }
       association_options[:class_name] = options[:site].camelcase + 'Profile' if options[:site]
 
-      has_many :profiles, association_options
+      if options[:multiple]
+        has_many :profiles, association_options
+      else
+        has_one :profile, association_options
+      end
 
       class_inheritable_reader :url_format
       write_inheritable_attribute(:url_format, options[:url_format] || /^https?:\/\/\w{2,}\.\w{2,}/)

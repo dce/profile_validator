@@ -38,4 +38,8 @@ unless defined?(ProfileValidator)
     validates_profile :url_format => /^http:\/\/www\.flickr\.com\/people\/\w+$/
   end
 
+  class MultipleProfileUser < User
+    validates_profile :multiple => true
+  end
+
 end
