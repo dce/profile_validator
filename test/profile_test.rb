@@ -96,7 +96,34 @@ class ProfileTest < Test::Unit::TestCase
         end
 
         should "require profile URL to match specified pattern" do
-          profile = @flickr_user.create_profile(:url => 'http://www.example.com/testuser')
+          profile = @flickr_user.create_profile(:url => 'http://www.example.com/flickruser')
+          assert_equal profile.valid?, false
+          assert_equal profile.errors["url"], "is invalid"
+        end
+
+      end
+
+      context "limited to a set of sites" do
+
+        setup do
+          @friend_user = FriendUser.create
+          info = stub(:properties => ['url'], :url => @friend_user.url_for_profile)
+          HCard.stubs(:find).with(:first => 'http://www.friendster.com/frienduser').returns(info)
+          HCard.stubs(:find).with(:first => 'http://www.friendfeed.com/frienduser').returns(info)
+        end
+
+        should "work if URL matches first pattern" do
+          profile = @friend_user.create_profile(:url => 'http://www.friendster.com/frienduser')
+          assert profile.valid?
+        end
+
+        should "work if URL matches second pattern" do
+          profile = @friend_user.create_profile(:url => 'http://www.friendfeed.com/frienduser')
+          assert profile.valid?
+        end
+
+        should "require profile URL to match specified pattern" do
+          profile = @friend_user.create_profile(:url => 'http://www.example.com/frienduser')
           assert_equal profile.valid?, false
           assert_equal profile.errors["url"], "is invalid"
         end

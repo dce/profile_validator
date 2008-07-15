@@ -13,14 +13,9 @@ unless defined?(ProfileValidator)
   config = open(File.dirname(__FILE__) + "/config.yml") { |f| YAML.load(f.read) }
   ActiveRecord::Base.establish_connection(config["database"])
   
-  ActiveRecord::Base.connection.drop_table :users rescue nil
   ActiveRecord::Base.connection.drop_table :profiles rescue nil
+  ActiveRecord::Base.connection.drop_table :users rescue nil
   
-  ActiveRecord::Base.connection.create_table :users do |t|
-    t.string :name
-    t.string :type
-  end
-
   ActiveRecord::Base.connection.create_table :profiles do |t|
     t.string  :type
     t.integer :profileable_id
@@ -29,13 +24,22 @@ unless defined?(ProfileValidator)
     t.text    :hcard
     t.timestamps
   end
-  
+
+  ActiveRecord::Base.connection.create_table :users do |t|
+    t.string :name
+    t.string :type
+  end
+
   class User < ActiveRecord::Base
     validates_profile
   end
 
   class FlickrUser < User
     validates_profile :url_format => /^http:\/\/www\.flickr\.com\/people\/\w+$/
+  end
+
+  class FriendUser < User
+    validates_profile :url_format => [/^http:\/\/www\.friendster\.com/, /^http:\/\/www\.friendfeed\.com/]
   end
 
   class MultipleProfileUser < User

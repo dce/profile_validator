@@ -32,7 +32,8 @@ class Profile < ActiveRecord::Base
   end
 
   def validate_url_format
-    errors.add(:url, "is invalid") unless valid = (self.url =~ self.profileable.class.url_format)
+    valid = self.profileable.class.url_format.detect {|format| self.url =~ format }
+    errors.add(:url, "is invalid") unless valid
     valid
   end
   

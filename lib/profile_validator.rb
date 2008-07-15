@@ -19,7 +19,9 @@ module ProfileValidator
       end
 
       class_inheritable_reader :url_format
-      write_inheritable_attribute(:url_format, options[:url_format] || /^https?:\/\/\w{2,}\.\w{2,}/)
+      format = options[:url_format]
+      format = [format || /^https?:\/\/\w{2,}\.\w{2,}/] unless format.is_a?(Array)
+      write_inheritable_attribute(:url_format, format)
 
       include InstanceMethods
     end
