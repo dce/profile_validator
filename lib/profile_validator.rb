@@ -32,7 +32,7 @@ module Viget
     module InstanceMethods
   
       def url_for_profile
-        "http://example.com/#{self.id}"
+        "http://example.com/#{self.class.to_s.tableize}/#{self.id}"
       end
 
     end

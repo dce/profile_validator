@@ -13,7 +13,7 @@ class ProfileValidatorTest < Test::Unit::TestCase
     end
     
     should "have a profile URL" do
-      assert_equal @user.url_for_profile, "http://example.com/#{@user.id}"
+      assert_equal @user.url_for_profile, "http://example.com/users/#{@user.id}"
     end
 
   end
