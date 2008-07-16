@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/test_helper'
 
 class ProfileValidatorTest < Test::Unit::TestCase
   
-  context "A class validating profiles" do
+  context "A class validating a profile" do
     
     setup do
       @user = User.create
