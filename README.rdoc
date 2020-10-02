@@ -45,3 +45,4 @@ ProfileValidator uses mofo (http://mofo.rubyforge.org/) to retrieve microformat 
 
 ---
 Copyright (c) 2008 Viget Labs, released under the MIT license
+ 
